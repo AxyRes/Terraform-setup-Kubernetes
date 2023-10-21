@@ -3,7 +3,7 @@ variable "environment_name" {
 }
 
 variable "instance_type" {
-  default = "t2.medium"
+  default = "t2.medium" # 2CPUs x 4RAM
 }
 
 variable "instance_name" {
@@ -11,11 +11,11 @@ variable "instance_name" {
 }
 
 variable "instance_key" {
-  default = "MISR_KEY"
+  default = "MISR_KEY" # Add Name Key in AWS console
 }
 
 variable "ami" {
-  default = "ami-078c1149d8ad719a7"
+  default = "ami-002843b0a9e09324a" # Ubuntu Server 20.04 Free tier
 }
 
 variable "vpc_cidr_block" {
@@ -27,5 +27,5 @@ variable "subnet_cidr" {
 }
 
 variable "myip" {
-  default = "171.246.210.79/32"
+  default = "171.246.210.79/32" # Your IP Public to access server
 }

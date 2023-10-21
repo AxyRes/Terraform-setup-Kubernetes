@@ -50,7 +50,7 @@ resource "aws_route_table_association" "rt_association_k8s" {
 }
 
 resource "aws_security_group" "vpc_sg_k8s" {
-  name        = "vpc-sg-k8s"
+  name        = "VPN-SG-K8S"
   vpc_id      = aws_vpc.vpc_k8s.id
 
   ingress {
@@ -85,13 +85,13 @@ resource "aws_security_group" "vpc_sg_k8s" {
     from_port        = 80
     to_port          = 80
     protocol         = "tcp"
-    cidr_blocks      = [var.subnet_cidr]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 
   egress {
     from_port        = 443
     to_port          = 443
     protocol         = "tcp"
-    cidr_blocks      = [var.subnet_cidr]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 }
