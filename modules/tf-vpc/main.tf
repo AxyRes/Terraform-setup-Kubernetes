@@ -68,6 +68,13 @@ resource "aws_security_group" "vpc_sg_k8s" {
   }
 
   ingress {
+    from_port        = 0
+    to_port          = 65535
+    protocol         = "-1"
+    cidr_blocks      = [var.subnet_cidr]
+  }
+
+  ingress {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
@@ -77,7 +84,7 @@ resource "aws_security_group" "vpc_sg_k8s" {
   egress {
     from_port        = 0
     to_port          = 65535
-    protocol         = "tcp"
+    protocol         = "-1"
     cidr_blocks      = [var.subnet_cidr]
   }
 
