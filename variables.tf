@@ -19,11 +19,11 @@ variable "ami" {
 }
 
 variable "vpc_cidr_block" {
-  default = "10.50.0.0/16"
+  default = "10.115.0.0/16"
 }
 
 variable "subnet_cidr" {
-  default = "10.50.20.0/24"
+  default = "10.115.20.0/24"
 }
 
 variable "myip" {

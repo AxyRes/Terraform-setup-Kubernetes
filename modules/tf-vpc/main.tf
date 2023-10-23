@@ -19,7 +19,7 @@ resource "aws_subnet" "subnet_k8s" {
   availability_zone = data.aws_availability_zones.available.names[0]
 
   tags = {
-    Name = "${local.base_name} Network AZ"
+    Name = "${local.base_name} Network Kubernetes Cluster"
   }
 }
 
@@ -27,14 +27,14 @@ resource "aws_internet_gateway" "igw_k8s" {
   vpc_id = aws_vpc.vpc_k8s.id
 
   tags = {
-    Name = "${local.base_name} Internet Gateway"
+    Name = "${local.base_name} Internet Gateway Kubernetes Cluster"
   }
 }
 
 resource "aws_route_table" "rt_ta_k8s" {
   vpc_id = aws_vpc.vpc_k8s.id
   tags = {
-    Name = "${local.base_name} Public Routing Table"
+    Name = "${local.base_name} Public Routing Table Kubernetes Cluster"
   }
 }
 
@@ -50,7 +50,7 @@ resource "aws_route_table_association" "rt_association_k8s" {
 }
 
 resource "aws_security_group" "vpc_sg_k8s" {
-  name        = "VPN-SG-K8S"
+  name        = "VPC-SG-K8S"
   vpc_id      = aws_vpc.vpc_k8s.id
 
   ingress {
@@ -69,8 +69,8 @@ resource "aws_security_group" "vpc_sg_k8s" {
 
   ingress {
     from_port        = 0
-    to_port          = 65535
-    protocol         = "-1"
+    to_port          = 0
+    protocol         = "all"
     cidr_blocks      = [var.subnet_cidr]
   }
 
@@ -83,8 +83,8 @@ resource "aws_security_group" "vpc_sg_k8s" {
 
   egress {
     from_port        = 0
-    to_port          = 65535
-    protocol         = "-1"
+    to_port          = 0
+    protocol         = "all"
     cidr_blocks      = [var.subnet_cidr]
   }
 
