@@ -8,3 +8,5 @@ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1
 curl https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml -o /home/ubuntu/custom-resources.yaml
 sed -i 's/192.168.0.0/'"$SUBNET_CIDR_IP"'/g' /home/ubuntu/custom-resources.yaml
 kubectl create -f /home/ubuntu/custom-resources.yaml
+
+kubectl get no -o wide

@@ -6,8 +6,8 @@ HOME_UBUNTU=/home/ubuntu
 echo "**************************************************"
 echo "*          Welcome to DOFE                       *"
 echo "*    This script is for setup Kubernetes Cluster *"
-echo "* - version 1.20.0 and will make this node       *"
-echo "*  become to a master node                       *"
+echo "* - version 1.27.0 and will make this node       *"
+echo "*  become to a worker node                       *"
 echo "*         Thanks for using code of AxyRes        *"
 echo "**************************************************"
 echo \n\n
@@ -16,10 +16,14 @@ if [ "$EUID" -ne 0 ]; then
     echo "Please use 'sudo' to run the script."
     exit 1
 fi
+read -p "Enter the number in order of the node: " NODE
 read -p "Input the Subnet CIDR is the same in variables.tf(Example input: 192.168.0.0): " SUBNET_CIDR_IP
-echo Start Install and Setup Kubernetes Master Node\n
+read -p "Enter the IP address or hostname of the Kubernetes master node: " MASTER_NODE_IP
+read -p "Enter the Kubernetes token: " TOKEN
+read -p "Enter the discovery token CA cert hash: " DISCOVERY_TOKEN_CA_CERT_HASH
+echo Start Install and Setup Kubernetes Worker Node\n
 
-hostnamectl set-hostname "axyres-master-node"
+hostnamectl set-hostname "axyres-worker-node0$NODE"
 ufw disable
 sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 swapoff -a
@@ -59,11 +63,9 @@ systemctl enable kubelet
 kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock
 sysctl -p
 
+# Setup Worker Node
 
-#Install Master Node
-kubeadm init --pod-network-cidr=$SUBNET_CIDR_IP/16 --cri-socket unix:///var/run/crio/crio.sock
+touch /proc/sys/net/bridge/bridge-nf-call-iptables
+kubeadm join $MASTER_NODE_IP:6443 --token $TOKEN --discovery-token-ca-cert-hash $DISCOVERY_TOKEN_CA_CERT_HASH
 
-echo "Kubernetes master node setup is complete!"
-
-
-
+echo "Kubernetes worker node $NODE setup is complete!"

@@ -65,11 +65,16 @@ resource "aws_instance" "k8s-worker-1" {
 #    key_name = var.instance_key 
 #    instance_type  = var.instance_type
 #    associate_public_ip_address = true
-#    subnet_id = module.custom-vpc.id
+#    subnet_id = module.custom_vpc.subnet_ids
 #    security_groups = [module.custom_vpc.security_group_id]
 #
 #    tags = {
-#        Name = "${var.instance_name}_K8S_WORKER_2"
+#        Name = "${var.instance_name}_K8S_WORKER_1"
+#    }
+#    root_block_device {
+#        volume_size = 50  # Size of the root volume in GB
+#        volume_type = "gp3"  # EBS volume type (General Purpose SSD)
+#        delete_on_termination = true  # Delete the volume when the instance is terminated
 #    }
 #}
 
