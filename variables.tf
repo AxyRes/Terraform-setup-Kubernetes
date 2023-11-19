@@ -3,7 +3,7 @@ variable "environment_name" {
 }
 
 variable "instance_type" {
-  default = "t2.medium" # 2CPUs x 4RAM
+  default = "t2.large" # 2CPUs x 4RAM
 }
 
 variable "instance_name" {
@@ -27,5 +27,5 @@ variable "subnet_cidr" {
 }
 
 variable "myip" {
-  default = "171.246.210.79/32" # Your IP Public to access server
+  default = "171.246.237.72/32" # Your IP Public to access server
 }

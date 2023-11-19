@@ -23,19 +23,34 @@ echo Start Install and Setup Kubernetes Master Node\n
 
 hostnamectl set-hostname "axyres-worker-node0$NODE"
 
+# Install Docker
 
 apt-get update -y
-apt-get install -y docker.io apt-transport-https ca-certificates git wget
+apt-get install -y docker.io apt-transport-https ca-certificates git wget nfs-common
 
 systemctl restart docker
 systemctl enable docker
 
 usermod -aG docker ubuntu
 
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -  
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" >/etc/apt/sources.list.d/kubernetes.list
-apt-get update -y
-apt install -y kubeadm=$VERSION.0-00 kubectl=$VERSION.0-00 kubelet=$VERSION.0-00
+
+# Install Kubenetes
+
+cat <<EOF | tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+
+apt-get update && apt-get install -y apt-transport-https curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+cat <<EOF | tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
 kubeadm join $MASTER_NODE_IP:6443 --token $TOKEN --discovery-token-ca-cert-hash $DISCOVERY_TOKEN_CA_CERT_HASH
