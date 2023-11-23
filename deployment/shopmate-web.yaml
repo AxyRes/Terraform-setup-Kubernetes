@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: application-shopmates
+
+--- # Deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopmates-web
+  namespace: application-shopmates
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopmates-web
+  template:
+    metadata:
+      labels:
+        app: shopmates-web
+    spec:
+      containers:
+        - name: web-shop
+          image: axyres/shopmates-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopmates-web-service
+  namespace: application-shopmates
+spec:
+  selector: 
+    app: shopmates-web
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  externalTrafficPolicy: Local
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: shopmates-web
+rules:
+  - apiGroups: [""]
+    resources: ["*"]
+    verbs: ["*"]
+
+
